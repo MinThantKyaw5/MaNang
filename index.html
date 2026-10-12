@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love You "Nann" ✨</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #fce7f0 50%, #f3e8ff 100%);
+            color: #331832;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* DYNAMIC GLOW ANIMATION */
+        .animated-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85vw;
+            height: 85vh;
+            background: radial-gradient(circle, rgba(244, 114, 182, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+            animation: pulseGlow 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
+            100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+        }
+
+        /* FLOATING HEARTS (BOTTOM TO TOP) */
+        .floating-element {
+            position: fixed;
+            font-size: 1.2rem;
+            user-select: none;
+            pointer-events: none;
+            animation: floatUp linear infinite;
+            z-index: 1;
+            opacity: 0.7;
+        }
+
+        @keyframes floatUp {
+            0% { 
+                transform: translateY(105vh) scale(0.8) rotate(0deg); 
+                opacity: 0; 
+            }
+            20% { opacity: 0.8; }
+            100% { 
+                transform: translateY(-10vh) scale(1.2) rotate(25deg); 
+                opacity: 0; 
+            }
+        }
+
+        /* FALLING HEARTS & SPARKLES (TOP TO BOTTOM) */
+        .falling-element {
+            position: fixed;
+            top: -5vh;
+            font-size: 1.2rem;
+            user-select: none;
+            pointer-events: none;
+            animation: fallDown linear infinite;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        @keyframes fallDown {
+            0% { 
+                transform: translateY(0) scale(0.7) rotate(0deg); 
+                opacity: 0; 
+            }
+            20% { opacity: 0.85; }
+            100% { 
+                transform: translateY(110vh) scale(1.2) rotate(180deg); 
+                opacity: 0; 
+            }
+        }
+
+        /* INTRO PAGE */
+        #intro-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(135deg, #fff5f7 0%, #fce7f0 100%);
+            text-align: center;
+            padding: 24px;
+            transition: opacity 1.2s ease;
+        }
+
+        .editorial-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+            font-weight: 600;
+            font-style: italic;
+            color: #9d174d;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .intro-subtitle {
+            color: #701a75;
+            font-size: clamp(1rem, 2.2vw, 1.15rem);
+            margin-bottom: 40px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            font-weight: 600;
+            padding: 16px 44px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(219, 39, 119, 0.35);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: bounceSoft 2s infinite;
+        }
+
+        @keyframes bounceSoft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .btn-action:hover { 
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 15px 30px rgba(219, 39, 119, 0.5);
+        }
+
+        /* MAIN CONTENT */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        .main-wrapper {
+            max-width: 580px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 50px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .romantic-card {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(251, 207, 232, 0.9);
+            border-radius: 28px;
+            padding: clamp(30px, 6vw, 50px);
+            margin-bottom: 25px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px rgba(157, 23, 77, 0.08);
+            text-align: center;
+        }
+
+        .gallery-img {
+            width: 100%;
+            aspect-ratio: 3 / 4; /* ပုံစကေးကို 3:4 ထားပေးခြင်း */
+            object-fit: cover;   /* ပုံမရှုံ့ဘဲ ကွက်တိလှအောင် ဖြတ်ပေးခြင်း */
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .letter-content {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.25rem, 3vw, 1.45rem);
+            line-height: 1.8;
+            color: #4a044e;
+            font-weight: 500;
+            text-align: left;
+            margin-bottom: 35px;
+        }
+
+        .letter-content p {
+            margin-bottom: 18px;
+        }
+
+        .question-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.2rem, 5.5vw, 3rem);
+            color: #be185d;
+            margin: 30px 0 25px 0;
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        /* BUTTONS */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            position: relative;
+            min-height: 60px;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ec4899, #be185d);
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 14px 44px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(190, 24, 93, 0.35);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 25px rgba(190, 24, 93, 0.5);
+        }
+
+        .btn-no {
+            background: #ffffff;
+            border: 1.5px solid #fbcfe8;
+            color: #9d174d;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 14px 38px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s ease;
+        }
+
+        .btn-no:hover {
+            background: #fff5f7;
+            border-color: #f472b6;
+        }
+
+        /* SUCCESS SCREEN */
+        #success-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .success-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.3rem, 6vw, 3.5rem);
+            color: #be185d;
+            margin-bottom: 20px;
+            font-style: italic;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .success-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.45rem;
+            color: #701a75;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="animated-glow"></div>
+
+    <audio id="bg-music" loop>
+        <source src="love-song.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- INTRO PAGE -->
+    <div id="intro-page">
+        <h1 class="editorial-title">My world was already quiet, <br>until you walked into it... 💖</h1>
+        <p class="intro-subtitle">A space meant only for you</p>
+        <button class="btn-action" onclick="revealSurprise()">Open with love 😁</button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content">
+        <div class="main-wrapper">
+            
+            <div id="proposal-card" class="romantic-card">
+                <img src="couple-photo.jpg" alt="Us" class="gallery-img">
+                
+                <div class="letter-content">
+                    <p>In a world full of noise, your presence is my absolute peace. Every smile you share and every moment with you brightens up my days in ways I cannot fully describe...</p>
+                    <p>You bring so much magic, warmth, and laughter into my life simply by being you. I cannot wait to create endless beautiful memories with you...</p>
+                </div>
+
+                <h2 class="question-title">Will you be my girlfriend? 🥺</h2>
+
+                <div class="btn-group">
+                    <button id="yes-btn" class="btn-yes" onclick="acceptedProposal()">YES! 💖</button>
+                    <button id="no-btn" class="btn-no" onclick="handleNoClick()">No 💔</button>
+                </div>
+            </div>
+
+            <!-- SUCCESS SCREEN -->
+            <div id="success-screen" class="romantic-card">
+                <h1 class="success-title">You are my favorite place to be. ✨💖</h1>
+                <p class="success-text">
+                     Thank you for choosing me. <br>
+                     I promise to make every single day special for you. 🥂💕
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Floating Elements (Bottom to Top)
+        function startFloatingElements() {
+            const items = ['💖', '✨', '🌸', '💕', '🤍'];
+            setInterval(() => {
+                const el = document.createElement('div');
+                el.classList.add('floating-element');
+                el.innerText = items[Math.floor(Math.random() * items.length)];
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDuration = Math.random() * 3 + 4 + 's';
+                document.body.appendChild(el);
+
+                setTimeout(() => { el.remove(); }, 7000);
+            }, 500);
+        }
+
+        // Falling Elements (Top to Bottom)
+        function startFallingElements() {
+            const items = ['💖', '✨', '🌷', '💕', '🤍', '🌸'];
+            setInterval(() => {
+                const el = document.createElement('div');
+                el.classList.add('falling-element');
+                el.innerText = items[Math.floor(Math.random() * items.length)];
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDuration = Math.random() * 3 + 4 + 's';
+                document.body.appendChild(el);
+
+                setTimeout(() => { el.remove(); }, 7000);
+            }, 400);
+        }
+
+        function revealSurprise() {
+            const introPage = document.getElementById('intro-page');
+            const mainContent = document.getElementById('main-content');
+            const bgMusic = document.getElementById('bg-music');
+
+            bgMusic.play().catch(e => console.log(e));
+
+            introPage.style.opacity = '0';
+            setTimeout(() => {
+                introPage.style.display = 'none';
+                mainContent.style.display = 'block';
+                
+                // အောက်ကတက်မယ့် Animation နဲ့ အပေါ်ကကျမယ့် Animation ၂ မျိုးလုံး စတင်ပေးခြင်း
+                startFloatingElements();
+                startFallingElements();
+
+                setTimeout(() => { mainContent.style.opacity = '1'; }, 50);
+            }, 1000);
+        }
+
+        let noClickCount = 0;
+        const noPhrases = [
+            "Are you sure? 🥺",
+            "Think again! 💭",
+            "Give it another thought! 😉",
+            "You don't mean that! 😜",
+            "Nice try, hit YES! ❤️"
+        ];
+
+        function handleNoClick() {
+            const noBtn = document.getElementById('no-btn');
+            const yesBtn = document.getElementById('yes-btn');
+            
+            if (noClickCount < noPhrases.length) {
+                noBtn.innerText = noPhrases[noClickCount];
+            } else {
+                noBtn.innerText = "YES is the only way! 😁";
+            }
+
+            noClickCount++;
+            let yesScale = 1 + (noClickCount * 0.18);
+            yesBtn.style.transform = `scale(${yesScale})`;
+
+            if (noClickCount >= 2) {
+                const x = Math.random() * 180 - 90;
+                const y = Math.random() * 80 - 40;
+                noBtn.style.transform = `translate(${x}px, ${y}px)`;
+            }
+        }
+
+        // TELEGRAM NOTIFICATION
+        function sendTelegramNotification() {
+            const botToken = "8693877921:AAFHtM9ykEkBttW0VCvuHRqVlaHfYnx4YKE";
+            const chatId = "1801109704";
+            const message = "🎉 Nann said Yes......!!! 💖✨";
+
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+            fetch(url).catch(err => console.log("Telegram Error: ", err));
+        }
+
+        function acceptedProposal() {
+            sendTelegramNotification();
+
+            document.getElementById('proposal-card').style.display = 'none';
+            document.getElementById('success-screen').style.display = 'block';
+
+            if (typeof confetti === "function") {
+                var duration = 4 * 1000;
+                var end = Date.now() + duration;
+
+                (function frame() {
+                    confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ec4899', '#f472b6', '#ffffff'] });
+                    confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ec4899', '#f472b6', '#ffffff'] });
+                    if (Date.now() < end) { requestAnimationFrame(frame); }
+                })();
+            }
+        }
+    </script>
+</body>
+</html>
